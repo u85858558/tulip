@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - default
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./docker/
+      dockerfile: Dockerfile
+    container_name: app
+    hostname: app
+    restart: unless-stopped
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+
+  varnish:
+    container_name: laravel-varnish
+    tty: true
+    depends_on:
+      - app
+    restart: always
+    build:
+      context: ./docker/varnish/
+      dockerfile: Dockerfile
+    networks:
+      - default
+    ports:
+      - "8080:8080"
+    command: 'sh start'
+    volumes:
+      - ./docker/varnish/default.vcl:/etc/varnish/default.vcl
+
+secrets:
+  db_root_password:
+    file: db_root_password.txt
+  db_password:
+    file: db_password.txt
+
+networks:
+  default:
+
+volumes:
+  postgres:
