@@ -14,6 +14,7 @@ services:
       - "5432:5432"
     networks:
       - default
+      - reverse-proxy
     restart: unless-stopped
 
   app:
@@ -21,6 +22,9 @@ services:
       context: ./docker/
       dockerfile: Dockerfile
     container_name: app
+    networks:
+      - default
+      - reverse-proxy
     hostname: app
     restart: unless-stopped
     volumes:
@@ -41,6 +45,7 @@ services:
       dockerfile: Dockerfile
     networks:
       - default
+      - reverse-proxy
     ports:
       - "8080:8080"
     command: 'sh start'
@@ -54,6 +59,9 @@ secrets:
     file: db_password.txt
 
 networks:
+  reverse-proxy:
+    external:
+      name: reverse-proxy
   default:
 
 volumes:
