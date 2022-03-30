@@ -14,5 +14,11 @@ class ExampleController extends Controller
         //
     }
 
+    public function test()
+    {
+        $array = ['number1' => 1,'number2' =>  2, 'number3' => 3];
+        return json_encode($array);
+    }
+
     //
 }
