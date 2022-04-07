@@ -13,12 +13,12 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-
-$router->get('test', 'ExampleController@test');
+//$router->get('/', function () use ($router) {
+//    return $router->app->version();
+//});
 
 $router->get('foo', function () {
     return 'Hello World';
 });
+
+$router->get('/', 'TelegramController@init');

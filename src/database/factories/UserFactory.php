@@ -22,8 +22,8 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
+            'telegram_id_user' => $this->faker->randomDigitNotNull,
+            'key_api' => $this->faker->randomDigit(),
         ];
     }
 }
